@@ -35,7 +35,21 @@ int main(void)
   wavh.bits_per_sample = 16;
   wavh.bytes_per_second = wavh.sample_rate * wavh.bits_per_sample / 8 * wavh.num_channels;
   wavh.bytes_per_sample = wavh.bits_per_sample / 8 * wavh.num_channels;
-
+  
+  // read results:
+  // riff:RIFF,q☻
+  // file_size:160044 //
+  // wave:WAVEfmt ►
+  // fmt:fmt ►
+  // chunk_size:16 //
+  // format_type:1 //
+  // num_chans:1 //
+  // srate:8000 //
+  // bytes/sec:16000 //
+  // bytes/sam:2 //
+  // bits/sam:16 //
+  // data:data //
+  // data_size:160000 //
 
   for (int i = 0; i < BUFFER_SIZE; i++) {
     buffer[i] = (short int)((cos((2 * M_PI * MIDDLE_C * i) / SAMPLE_RATE) * 1000));
@@ -43,6 +57,10 @@ int main(void)
 
   wavh.data_size = BUFFER_SIZE * wavh.bytes_per_sample;
   wavh.file_size = wavh.data_size + header_length;
+
+  // for (int i = 0; i < BUFFER_SIZE; i++) {
+  //       printf("%d\n", buffer[i]);
+  // }
 
   FILE *fp = fopen("test.wav", "w");
   fwrite(&wavh, 1, header_length, fp);
