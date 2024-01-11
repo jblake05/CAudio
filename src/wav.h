@@ -15,3 +15,8 @@ struct wav_header{
     char data[4];
     uint32_t data_size;
 };
+
+struct wav{
+    struct wav_header wavh;
+    short *buffer;
+}
