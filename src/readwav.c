@@ -76,7 +76,6 @@ int main(void){
     
     const int BUFFER_SIZE = wavh.data_size / wavh.bytes_per_sample;
 
-    printf("Buffer size: %d\n", BUFFER_SIZE);
     short buffer[BUFFER_SIZE];
 
     for (int i = 1; i < wavh.file_size; i+=wavh.bytes_per_sample) {
@@ -85,29 +84,10 @@ int main(void){
         byte top = file_buffer[i + 1];
         byte bottom = file_buffer[i];
 
-        printf("top: %d\n", top);
-        printf("bottom: %d\n", bottom);
-
         output = ((top << 8) | (bottom));
 
         buffer[(i - 1)/wavh.bytes_per_sample] = output;
-        printf("output: %d\n", output);
     }
-
-    // BAD COPY
-    // for (int i = 0; i < BUFFER_SIZE; i++){
-
-    //     buffer[i] = int16_array_part(file_buffer, i * wavh.bytes_per_sample + header_length + 1);
-    //     // printf("%d\n\n", buffer[i]);
-    //     // Sleep(500)
-
-    //     // buffer[i] = ((file_buffer[i * wavh.bytes_per_sample + header_length + 1] << 8) |
-    //     //     (file_buffer[i * wavh.bytes_per_sample + header_length]));
-    //     // printf("\n%d\n%d\n-------", i * wavh.bytes_per_sample + header_length + 1, i * wavh.bytes_per_sample + header_length);
-
-    // }
-
-    printf("Post-loop");
 
     free(file_buffer);
     fclose(fr);
@@ -117,39 +97,3 @@ int main(void){
     fwrite(&wavh, 1, header_length, fw);
     fwrite(&buffer, 2, BUFFER_SIZE, fw);
 }
-
-// int main(void){
-
-//     return 0;
-// }
-
-// writewav
-// 1000
-// 979
-// 920
-// 823
-// 693
-// 535
-// 356
-// 162
-// -37
-// -236
-// -425
-// -597
-// -745
-// -863
-// -947
-// -992
-// -997
-// -962
-// -888
-// -778
-// -637
-// -470
-// -285
-// -87
-// 112
-// 309
-// 492
-// 656
-
