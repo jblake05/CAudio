@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdio.h>
 #include "wav.h"
+#include <windows.h>
+
 // main.c
 // for now
 
@@ -53,10 +55,33 @@ int main(void)
 
   for (int i = 0; i < BUFFER_SIZE; i++) {
     buffer[i] = (short int)((cos((2 * M_PI * MIDDLE_C * i) / SAMPLE_RATE) * 1000));
+    // if (i < 26) {
+    //   printf("%d\n", buffer[i]);
+    //   // buffer[i] = 0x03E8
+    //   // char top = 0x03
+    //   // char bottom = 0xE8
+
+    //   char top = buffer[i] >> 8;
+    //   char bottom = buffer[i] % ((int) top * 0x100);
+
+    //   printf("top: %d\n bottom: %d\n", top, bottom);
+    //   // printf("test: %c", 0x03);
+    //   Sleep(1000);
+    // }
   }
 
   wavh.data_size = BUFFER_SIZE * wavh.bytes_per_sample;
   wavh.file_size = wavh.data_size + header_length;
+
+  printf("BUFF SIZE: %d", BUFFER_SIZE);
+  
+  for (int i = 0; i < BUFFER_SIZE; i++) {
+    char top = buffer[i] >> 8;
+    char bottom = buffer[i] % ((int) top * 0x100);
+    printf("%c%c", bottom, top);
+  }
+
+  Sleep(10000);
 
   // for (int i = 0; i < BUFFER_SIZE; i++) {
   //       printf("%d\n", buffer[i]);
@@ -64,5 +89,5 @@ int main(void)
 
   FILE *fp = fopen("test.wav", "w");
   fwrite(&wavh, 1, header_length, fp);
-  fwrite(buffer, 2, BUFFER_SIZE, fp);
+  fwrite(&buffer, 2, BUFFER_SIZE, fp);
 }
