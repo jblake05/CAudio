@@ -158,7 +158,7 @@ int main(void) {
 
     short *buffer = get_buffer("test.wav");
 
-    printf("Here");
+    printf("Here\n");
     // for (int i = 0; i < BUFFER_SIZE; i++) {
     //     printf("%d\n", buffer[i]);
     //     // Sleep(500);
@@ -166,13 +166,36 @@ int main(void) {
 
     wav.buffer = buffer;
 
-    for (int i = 0; i < BUFFER_SIZE; i++) {
-        printf("%d\n", wav.buffer[i]);
-        Sleep(500);
-    }
+    char riff[4];
+    uint32_t file_size;
+    char wave[4];
+    char fmt[4];
+    uint32_t chunk_size;
+    uint16_t format_type;
+    uint16_t num_channels;
+    uint32_t sample_rate;
+    uint32_t bytes_per_second;
+    uint16_t bytes_per_sample;
+    uint16_t bits_per_sample;
+    char data[4];
+    uint32_t data_size;
 
-    FILE *fw = fopen("vAfter.wav", "w");
+    printf("%s\n", wav.wavh.riff);
+    printf("%d\n", wav.wavh.file_size);
+    printf("%s\n", wav.wavh.wave);
+    printf("%s\n", wav.wavh.fmt);
+    printf("%d\n", wav.wavh.chunk_size);
+    printf("%d\n", wav.wavh.format_type);
+    printf("%d\n", wav.wavh.num_channels);
+    printf("%d\n", wav.wavh.sample_rate);
+    printf("%d\n", wav.wavh.bytes_per_second);
+    printf("%d\n", wav.wavh.bytes_per_sample);
+    printf("%d\n", wav.wavh.bits_per_sample);
+    printf("%s\n", wav.wavh.data);
+    printf("%d\n", wav.wavh.data_size);
+
+    FILE *fw = fopen("pAfter.wav", "w");
     fwrite(&wav.wavh, 1, header_length, fw);
-    fwrite(&buffer, 2, BUFFER_SIZE, fw);
+    fwrite(wav.buffer, 2, BUFFER_SIZE, fw);
     free(buffer);
 }
