@@ -33,44 +33,6 @@ uint16_t int16_array_part(char* a, int end) {
     return result;
 }
 
-struct wav_header get_header(char* input_path) {
-    struct wav_header wavh;
-    FILE *fr = fopen(input_path, "r");
-
-    // Declare buffers, get file size
-    char header_buffer[44];
-    fgets(header_buffer, 44, fr);
-
-    // declare other header variables
-    char *riff = array_part(header_buffer, 0, 3);
-    char *wave = array_part(header_buffer, 8, 11);
-    char *fmt = array_part(header_buffer, 12, 15);
-    char *data = array_part(header_buffer, 36, 39);
-
-    strncpy(wavh.riff, riff, 4);
-    strncpy(wavh.wave, wave, 4);
-    strncpy(wavh.fmt, fmt, 4);
-    strncpy(wavh.data, data, 4);
-
-    free(riff);
-    free(wave);
-    free(fmt);
-    free(data);
-
-    wavh.file_size = int32_array_part(header_buffer, 7);
-    wavh.chunk_size = int32_array_part(header_buffer, 19);
-    wavh.format_type = int16_array_part(header_buffer, 21);
-    wavh.num_channels = int16_array_part(header_buffer, 23);
-    wavh.sample_rate = int32_array_part(header_buffer, 27);
-    wavh.bits_per_sample = int16_array_part(header_buffer, 35);
-    wavh.data_size = int32_array_part(header_buffer, 43);
-
-    wavh.bytes_per_second = wavh.sample_rate * wavh.bits_per_sample / 8 * wavh.num_channels;
-    wavh.bytes_per_sample = wavh.bits_per_sample / 8 * wavh.num_channels;
-
-    return wavh;
-}
-
 struct wav read_wav(char* input_path){
     struct wav_header wavh;
     FILE *fr = fopen(input_path, "r");
@@ -124,21 +86,10 @@ struct wav read_wav(char* input_path){
         output = ((top << 8) | (bottom));
 
         buffer[(i - 1)/wavh.bytes_per_sample] = output;
-        // printf("%d\n", output);
-        // Sleep(500);
     }
-
-    // printf("Post-iter");
-    // Sleep(10000);
     
     free(file_buffer);
-    // printf("Post-free");
     fclose(fr);
-    // printf("Post-fclose");
-
-    // short *i = malloc(2);
-    // return i;
-    // printf("Prere");
 
     struct wav wav;
 
@@ -153,21 +104,8 @@ struct wav read_wav(char* input_path){
 
 int main(void) {
     struct wav wav = read_wav("test.wav");
-    
-    // wav.wavh = get_header("test.wav");
-    // printf("Prebuff");
 
-    // short *buffer = get_buffer("test.wav");
-
-    // printf("Here\n");
-    // // for (int i = 0; i < BUFFER_SIZE; i++) {
-    // //     printf("%d\n", buffer[i]);
-    // //     // Sleep(500);
-    // // }
-
-    // wav.buffer = buffer;
-
-    FILE *fw = fopen("mAfter.wav", "w");
+    FILE *fw = fopen("after.wav", "w");
     fwrite(&wav.wavh, 1, wav.header_length, fw);
     fwrite(wav.buffer, 2, wav.buffer_size, fw);
     free(wav.buffer);

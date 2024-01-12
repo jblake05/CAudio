@@ -18,7 +18,8 @@ struct wav_header{
 
 struct wav{
     struct wav_header wavh;
+    int header_length;
+
     short *buffer;
     int buffer_size;
-    int header_length;
 };
